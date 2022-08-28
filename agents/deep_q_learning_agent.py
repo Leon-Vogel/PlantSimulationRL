@@ -263,5 +263,5 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
             action_indexes.shape = (action_indexes.shape[0])
             action_index = np.random.choice(action_indexes)
             action = self.actions[action_index]
-            print('Not Random')
+            print('Not Random'+action)
         return action

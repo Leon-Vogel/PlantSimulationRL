@@ -5,7 +5,6 @@ from plantsim.plantsim import Plantsim
 from agents.sac_agent import SAC_Agent
 from utils import plot_learning_curve
 
-
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 # model = pfad + '\MiniFlow_BE_based_MAS.spp'
 model = pfad + '\Reihenfolgeplanung_diL_20220828_mit_Lagerstand_SAC.spp'
@@ -16,6 +15,26 @@ model = pfad + '\Reihenfolgeplanung_diL_20220828_mit_Lagerstand_SAC.spp'
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
                     socket=None, visible=True)
 
+
+'''def get_actions(act):
+    a = [0, 0, 0]
+    if act == 'Lager1':
+        a = [1, 0, 0]
+    elif act == 'Lager2':
+        a = [0, 1, 0]
+    elif act == 'Schleife':
+        a = [0, 0, 1]
+    return a'''
+def get_actions(act):
+    if np.argmax(act) == 1:
+        a = 'Lager1'
+    elif np.argmax(act) == 2:
+        a = 'Lager2'
+    else:
+        a = 'Schleife'
+    return a
+
+
 if __name__ == '__main__':
     env = Environment(plantsim)  # env = gym.make('InvertedPendulumBulletEnv-v0')
     actions = env.problem.get_all_actions()
@@ -24,7 +43,7 @@ if __name__ == '__main__':
     test = env.problem.state
     print(test)
     print(actions)
-    agent = SAC_Agent(env.problem, input_dims=[len(test)],
+    agent = SAC_Agent(input_dims=[len(test)], env=env.problem,
                       n_actions=len(env.problem.get_all_actions()))
     # SAC_Agent(input_dims=env.observation_space.shape, env=env,
     #         n_actions=env.action_space.shape[0])
@@ -52,16 +71,17 @@ if __name__ == '__main__':
             r = env.problem.get_reward(current_state)
             s = s_new
             s_new = current_state.to_state()
-            a = actions.index(action) #Aktionen zu liste mit aktivierung transformieren
-            done = env.problem.is_goal_state(current_state)
-            score += r
-            agent.remember(s, a, r, s_new, done)
-            if not load_checkpoint:
-                agent.learn()
+            if action is not None:
+                a = actions.index(action)  # Aktionen zu liste mit aktivierung transformieren
+                done = env.problem.is_goal_state(current_state)
+                score += r
+                agent.remember(s, a, r, s_new, done)
+                if not load_checkpoint:
+                    agent.learn()
             if done:
                 break
 
-            action = agent.choose_action(current_state)  # (observation)
+            action = get_actions(agent.choose_action(s_new))  # (observation)
             print(action)
             env.problem.act(action)
 

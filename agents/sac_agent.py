@@ -17,7 +17,7 @@ class SAC_Agent():
         self.n_actions = n_actions
 
         self.actor = ActorNetwork(alpha, input_dims, n_actions=n_actions,
-                                  name='actor', max_action=max(env.problem.state))#env.action_space.high)
+                                  name='actor', max_action=1)#env.action_space.high)
         self.critic_1 = CriticNetwork(beta, input_dims, n_actions=n_actions,
                                       name='critic_1')
         self.critic_2 = CriticNetwork(beta, input_dims, n_actions=n_actions,
