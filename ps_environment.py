@@ -92,7 +92,7 @@ class PlantSimulationProblem(Problem):
                     self.goal_state = value
                 else:
                     self.state.append(value)
-                    print(key +":  "+ str(value))
+                    #print(key +":  "+ str(value))
             if states.items() == None:
                 print("kein state")
             self.next_event = False

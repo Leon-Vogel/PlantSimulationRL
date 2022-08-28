@@ -16,15 +16,16 @@ plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.M
                     socket=None, visible=True)
 
 
-'''def get_actions(act):
+def get_actions2(act):
     a = [0, 0, 0]
-    if act == 'Lager1':
+    if act == 0:
         a = [1, 0, 0]
-    elif act == 'Lager2':
+    elif act == 1:
         a = [0, 1, 0]
-    elif act == 'Schleife':
+    elif act == 2:
         a = [0, 0, 1]
-    return a'''
+    return a
+
 def get_actions(act):
     if np.argmax(act) == 1:
         a = 'Lager1'
@@ -72,7 +73,9 @@ if __name__ == '__main__':
             s = s_new
             s_new = current_state.to_state()
             if action is not None:
-                a = actions.index(action)  # Aktionen zu liste mit aktivierung transformieren
+                a = get_actions2(actions.index(action))  # Aktionen zu liste mit aktivierung transformieren
+
+                print(a)
                 done = env.problem.is_goal_state(current_state)
                 score += r
                 agent.remember(s, a, r, s_new, done)
