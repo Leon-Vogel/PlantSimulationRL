@@ -7,7 +7,7 @@ from utils import plot_learning_curve
 
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 # model = pfad + '\MiniFlow_BE_based_MAS.spp'
-model = pfad + '\Reihenfolgeplanung_diL_20220828_mit_Lagerstand_SAC.spp'
+model = pfad + '\Reihenfolgeplanung_diL_20220828_mit_komplettemLagerstand_SAC_neuer_Reward.spp'
 # model = pfad + '\Reihenfolgeplanung_diL_20220827.spp'
 
 # pfad = 'D:\\Studium\\3.Semester\DiskreteSimulation&RL\Projekt'
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     print(test)
     print(actions)
     agent = SAC_Agent(input_dims=[len(test)], env=env.problem,
-                      n_actions=len(env.problem.get_all_actions()))
+                      n_actions=len(actions))
     # SAC_Agent(input_dims=env.observation_space.shape, env=env,
     #         n_actions=env.action_space.shape[0])
     max_iterations = 250
