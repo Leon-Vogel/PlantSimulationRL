@@ -17,11 +17,11 @@ class SAC_Agent():
         self.n_actions = n_actions
 
         self.actor = ActorNetwork(alpha, input_dims, n_actions=n_actions,
-                                  name='actor', max_action=1)#env.action_space.high)
+                                  fc1_dims=layer1_size, fc2_dims=layer2_size, name='actor', max_action=1)#env.action_space.high)
         self.critic_1 = CriticNetwork(beta, input_dims, n_actions=n_actions,
-                                      name='critic_1')
+                                      fc1_dims=layer1_size, fc2_dims=layer2_size, name='critic_1')
         self.critic_2 = CriticNetwork(beta, input_dims, n_actions=n_actions,
-                                      name='critic_2')
+                                      fc1_dims=layer1_size, fc2_dims=layer2_size, name='critic_2')
         self.value = ValueNetwork(beta, input_dims, name='value')
         self.target_value = ValueNetwork(beta, input_dims, name='target_value')
 
@@ -35,6 +35,8 @@ class SAC_Agent():
         return actions.cpu().detach().numpy()[0]
 
     def remember(self, state, action, reward, new_state, done):
+        #print('new_state: ')
+        #print(new_state)
         self.memory.store_transition(state, action, reward, new_state, done)
 
     def update_network_parameters(self, tau=None):

@@ -7,7 +7,7 @@ from torch.distributions.normal import Normal
 import numpy as np
 
 class CriticNetwork(nn.Module):
-    def __init__(self, beta, input_dims, n_actions, fc1_dims=50, fc2_dims=50, #256
+    def __init__(self, beta, input_dims, n_actions, fc1_dims=256, fc2_dims=256, #256
             name='critic', chkpt_dir='tmp/sac'):
         super(CriticNetwork, self).__init__()
         self.input_dims = input_dims
@@ -21,6 +21,7 @@ class CriticNetwork(nn.Module):
         self.fc1 = nn.Linear(self.input_dims[0]+n_actions, self.fc1_dims)
         self.fc2 = nn.Linear(self.fc1_dims, self.fc2_dims)
         self.q = nn.Linear(self.fc2_dims, 1)
+        #self.dropout = nn.Dropout(0.25)
 
         self.optimizer = optim.Adam(self.parameters(), lr=beta)
         self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
@@ -30,6 +31,7 @@ class CriticNetwork(nn.Module):
     def forward(self, state, action):
         action_value = self.fc1(T.cat([state, action], dim=1))
         action_value = F.relu(action_value)
+        #action_value = self.dropout(action_value)
         action_value = self.fc2(action_value)
         action_value = F.relu(action_value)
 
@@ -44,7 +46,7 @@ class CriticNetwork(nn.Module):
         self.load_state_dict(T.load(self.checkpoint_file))
 
 class ValueNetwork(nn.Module):
-    def __init__(self, beta, input_dims, fc1_dims=50 , fc2_dims=50 , #256
+    def __init__(self, beta, input_dims, fc1_dims=256 , fc2_dims=256 , #256
             name='value', chkpt_dir='tmp/sac'):
         super(ValueNetwork, self).__init__()
         self.input_dims = input_dims
@@ -57,6 +59,7 @@ class ValueNetwork(nn.Module):
         self.fc1 = nn.Linear(*self.input_dims, self.fc1_dims)
         self.fc2 = nn.Linear(self.fc1_dims, fc2_dims)
         self.v = nn.Linear(self.fc2_dims, 1)
+        self.dropout = nn.Dropout(0.25)
 
         self.optimizer = optim.Adam(self.parameters(), lr=beta)
         self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
@@ -66,6 +69,7 @@ class ValueNetwork(nn.Module):
     def forward(self, state):
         state_value = self.fc1(state)
         state_value = F.relu(state_value)
+        #state_value = self.dropout(state_value)
         state_value = self.fc2(state_value)
         state_value = F.relu(state_value)
 
@@ -80,8 +84,8 @@ class ValueNetwork(nn.Module):
         self.load_state_dict(T.load(self.checkpoint_file))
 
 class ActorNetwork(nn.Module):
-    def __init__(self, alpha, input_dims, max_action, fc1_dims=50, #256
-            fc2_dims=50, n_actions=2, name='actor', chkpt_dir='tmp/sac'):
+    def __init__(self, alpha, input_dims, max_action, fc1_dims=256, #256
+            fc2_dims=256, n_actions=2, name='actor', chkpt_dir='tmp/sac'):
         super(ActorNetwork, self).__init__()
         self.input_dims = input_dims
         self.fc1_dims = fc1_dims
@@ -97,6 +101,7 @@ class ActorNetwork(nn.Module):
         self.fc2 = nn.Linear(self.fc1_dims, self.fc2_dims)
         self.mu = nn.Linear(self.fc2_dims, self.n_actions)
         self.sigma = nn.Linear(self.fc2_dims, self.n_actions)
+        self.dropout = nn.Dropout(0.25)
 
         self.optimizer = optim.Adam(self.parameters(), lr=alpha)
         self.device = T.device('cuda:0' if T.cuda.is_available() else 'cpu')
@@ -106,6 +111,7 @@ class ActorNetwork(nn.Module):
     def forward(self, state):
         prob = self.fc1(state)
         prob = F.relu(prob)
+        #prob = self.dropout(prob)
         prob = self.fc2(prob)
         prob = F.relu(prob)
 

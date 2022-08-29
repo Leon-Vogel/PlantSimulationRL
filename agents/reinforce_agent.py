@@ -32,13 +32,13 @@ class PolicyNetwork(nn.Module):
         return x
 
     def get_max_action(self, state):
-        #state = torch.from_numpy(np.array(state)).float().unsqueeze(0)
+        # state = torch.from_numpy(np.array(state)).float().unsqueeze(0)
         probs = self.forward(state)
         highest_prob_action = np.argmax(np.squeeze(probs.cpu().detach().numpy()))
         return highest_prob_action
 
     def get_action(self, state):
-        #state = torch.from_numpy(np.array(state)).float().unsqueeze(0)
+        # state = torch.from_numpy(np.array(state)).float().unsqueeze(0)
         probs = self.forward(state)
         highest_prob_action = np.random.choice(self.num_actions, p=np.squeeze(probs.cpu().detach().numpy()))
         log_prob = torch.log(probs.squeeze(0)[highest_prob_action])
@@ -57,7 +57,7 @@ class PolicyNetwork(nn.Module):
 
         discounted_rewards = torch.tensor(discounted_rewards)
         discounted_rewards = (discounted_rewards - discounted_rewards.mean()) / (
-                    discounted_rewards.std() + 1e-9)  # normalize discounted rewards
+                discounted_rewards.std() + 1e-9)  # normalize discounted rewards
 
         policy_gradient = []
         for log_prob, Gt in zip(log_probabilities, discounted_rewards):
@@ -99,12 +99,18 @@ class ReinforceAgent(Agent):
     def train(self):
         log_probabilities = []
         rewards = []
+        step = 0
         while True:
+            step += 1
             current_state = self.problem.get_current_state()
             rewards.append(self.problem.get_reward(current_state))
             s = current_state.to_state()
             action_index, log_prob = self.policy.get_action(s)
             log_probabilities.append(log_prob)
+            '''if (step % 1001 == 0):
+                if len(rewards) > 1:
+                    self.policy.update_policy(log_probabilities, rewards)
+'''
             if self.problem.is_goal_state(current_state):
                 if len(rewards) > 1:
                     self.policy.update_policy(log_probabilities, rewards)

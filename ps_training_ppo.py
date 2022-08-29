@@ -1,12 +1,9 @@
-import random
-
 from ps_environment import Environment
 import matplotlib.pyplot as plt
 import numpy as np
 from plantsim.plantsim import Plantsim
-from agents.sac_agent import SAC_Agent
+from agents.ppo_agent import PPOAgent
 from utils import plot_learning_curve
-from scipy.special import softmax
 
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 # model = pfad + '\MiniFlow_BE_based_MAS.spp'
@@ -29,19 +26,14 @@ def get_actions2(act):
         a = [0, 0, 1]
     return a
 
-
-
-
 def get_actions(act):
-    #probs = softmax(act)
-    #a = random.choices(population=['Schleife','Lager1','Lager2'], weights=probs)
     if np.argmax(act) == 1:
         a = 'Lager1'
     elif np.argmax(act) == 2:
         a = 'Lager2'
     else:
         a = 'Schleife'
-    return a#[0]
+    return a
 
 
 if __name__ == '__main__':
@@ -52,7 +44,7 @@ if __name__ == '__main__':
     test = env.problem.state
     print(test)
     print(actions)
-    agent = SAC_Agent(input_dims=[len(test)], env=env.problem,
+    agent = PPOAgent(input_dims=[len(test)], env=env.problem,
                       n_actions=len(actions))
     # SAC_Agent(input_dims=env.observation_space.shape, env=env,
     #         n_actions=env.action_space.shape[0])
