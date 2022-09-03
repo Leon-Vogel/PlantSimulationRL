@@ -5,17 +5,17 @@ import torch.nn as nn
 
 
 class PolicyNetwork(nn.Module):
-    def __init__(self, num_inputs, num_actions, Optimizer=torch.optim.Adam, learning_rate=3e-4,
+    def __init__(self, num_inputs, num_actions, Optimizer=torch.optim.Adam, learning_rate=0.005,#3e-4,
                  gamma=0.99, transform=None):
         super(PolicyNetwork, self).__init__()
 
         self.num_actions = num_actions
         self.model = nn.Sequential(
-            nn.Linear(num_inputs, 128),
+            nn.Linear(num_inputs, 50),#128
             nn.ReLU(),
-            nn.Linear(128, 64),
+            nn.Linear(50, 20),#(128, 64)
             nn.ReLU(),
-            nn.Linear(64, num_actions),
+            nn.Linear(20, num_actions),
             nn.Softmax(1), )
         self.device = "cpu"
         if torch.cuda.is_available():
@@ -107,13 +107,12 @@ class ReinforceAgent(Agent):
             s = current_state.to_state()
             action_index, log_prob = self.policy.get_action(s)
             log_probabilities.append(log_prob)
-            '''if (step % 1001 == 0):
-                if len(rewards) > 1:
-                    self.policy.update_policy(log_probabilities, rewards)
-'''
+
             if self.problem.is_goal_state(current_state):
                 if len(rewards) > 1:
+                    print('Policy Update')
                     self.policy.update_policy(log_probabilities, rewards)
+                    self.save()
                 return
             # act
             action = self.actions[action_index]

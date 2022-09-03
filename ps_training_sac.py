@@ -10,7 +10,9 @@ from scipy.special import softmax
 
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 # model = pfad + '\MiniFlow_BE_based_MAS.spp'
-model = pfad + '\Reihenfolgeplanung_diL_20220829_mit_komplettemLagerstand_SAC_neuer_Reward.spp'
+#model = pfad + '\Reihenfolgeplanung_diL_20220829_mit_komplettemLagerstand_SAC_neuer_Reward.spp'
+model = pfad + '\PickandPlace_diL_20220903_mit_Lagerstand_neuer_R_mit_Durchlaufzeit.spp'
+
 # model = pfad + '\Reihenfolgeplanung_diL_20220827.spp'
 
 # pfad = 'D:\\Studium\\3.Semester\DiskreteSimulation&RL\Projekt'

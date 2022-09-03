@@ -9,7 +9,7 @@ from plantsim.plantsim import Plantsim
 # socket is the name of the socket object in PlantSim or None if not used
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 #model = pfad + '\MiniFlow_BE_based_MAS.spp'
-model = pfad + '\Reihenfolgeplanung_diL_20220829_mit_Lagerstand.spp'
+model = pfad + '\Reihenfolgeplanung_diL_20220831_mit_Lagerstand_Reinforce.spp'
 #model = pfad + '\Reihenfolgeplanung_diL_20220829_mit_komplettemLagerstand_SAC_neuer_Reward.spp'
 
 #pfad = 'D:\\Studium\\3.Semester\DiskreteSimulation&RL\Projekt'

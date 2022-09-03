@@ -137,11 +137,11 @@ class DeepQLearningAgent(QLearningAgent):
 
     def __init__(self, problem, q_table=None, N_sa=None, gamma=0.99, max_N_exploration=100, R_Max=100,
                  q_table_file="deep_q_table.pth", batch_size=10, Optimizer=torch.optim.Adam, loss_fn=nn.MSELoss(),
-                 ModelClass=DeepQTable):
+                 ModelClass=DeepDuelingQTable):  # DeepQTable):
         super().__init__(problem, q_table=q_table, N_sa=N_sa, gamma=gamma, max_N_exploration=max_N_exploration,
                          R_Max=R_Max, q_table_file=q_table_file)
         all_states = np.array(self.states)
-        print(all_states)
+        # print(all_states)
         min_values = np.amin(all_states, axis=0)
         max_values = np.maximum(np.ones_like(self.states[0]), np.amax(all_states, axis=0))
         transform = lambda x: (x - min_values) / (max_values - min_values)
@@ -171,7 +171,8 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
 
     def __init__(self, problem, q_table=None, N_sa=None, gamma=0.9, max_N_exploration=100, R_Max=100,
                  q_table_file="double_deep_q_table.pth", batch_size=10, Optimizer=torch.optim.Adam,
-                 loss_fn=nn.MSELoss(), ModelClass=DeepQTable, update_interval=40):
+                 loss_fn=nn.MSELoss(), ModelClass=DeepQTable,
+                 update_interval=40):  # DeepQTableDeepDuelingQTable, update_interval=40):
         super().__init__(problem, q_table=q_table, N_sa=N_sa, gamma=gamma, max_N_exploration=max_N_exploration,
                          R_Max=R_Max, batch_size=batch_size, q_table_file=q_table_file, Optimizer=Optimizer,
                          loss_fn=loss_fn, ModelClass=ModelClass)
@@ -179,7 +180,8 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         self.update_count = 0
         self.update_interval = update_interval
         self.counter = 1
-
+        self.rand_act = 0
+        self.act = 0
 
     def update_q_values(self, s, a, r, s_new, is_goal_state):
         self.experience_replay.remember((s, a, r, s_new), is_goal_state)
@@ -200,11 +202,11 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         action = self.actions[np.argmax(self.q_table[s])]
         return action
 
-
     # Todo: eigene train methode schreiben
     def save(self):
         torch.save(self.online_q_table.state_dict(), "q_table.npy")
-        #self.online_q_table.save_model("q_table.npy")
+        print('Save successful')
+        # self.online_q_table.save_model("q_table.npy")
 
     def load(self):
         if os.path.exists("D:\Studium\Projekt\Methodenvergleich\PlantSimulationRL\q_table.npy"):
@@ -215,15 +217,17 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         action = None
         s_new = None
         step = 0
-        self.load()
+        self.act = 0
+        self.rand_act = 0
+        # self.load()
         while True:
             current_state = self.problem.get_current_state()
             step += 1
             r = self.problem.get_reward(current_state)
             s = s_new
             s_new = current_state.to_state()
-            if step % 2001 == 0:
-                self.save()
+            # if self.problem.step % 2001 == 0:
+            # self.save()
             if s_new not in self.N_sa.keys():
                 self.N_sa[s_new] = np.zeros(len(self.actions))
                 self.online_q_table[s_new] = np.zeros(len(self.actions))
@@ -233,7 +237,7 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
                 self.update_q_values(s, a, r, s_new, self.problem.is_goal_state(current_state))
             if self.problem.is_goal_state(current_state):
                 self.q_table = deepcopy(self.online_q_table)
-                self.save()
+                # self.save()
                 return self.q_table, self.N_sa
             action = self.choose_GLIE_action(self.online_q_table[s_new], self.N_sa[s_new])
             # act
@@ -254,14 +258,23 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         else:
             probabilities = max_values / max_values.sum()
         # select action according to the (q) values
-        #if (np.random.random()**2) < 2:
-        if (1*np.random.random()**2) > (self.counter/3000)-0.00001:
-            print('Random')
-            action = np.random.choice(self.actions, p=probabilities)
-        else:
+        # if (np.random.random()**2) < 2:
+        if self.counter > 0:
             action_indexes = np.argwhere(probabilities == np.amax(probabilities))
             action_indexes.shape = (action_indexes.shape[0])
             action_index = np.random.choice(action_indexes)
             action = self.actions[action_index]
-            print('Not Random'+action)
+            self.act += 1
+            print('Not Random' + action+'-------'+str(self.act/(self.act+self.rand_act)))
+        elif ((np.random.random()**2) - 0.6) > (((self.counter +40000)/ 80000)) * np.random.random():
+            self.rand_act += 1
+            print('Random'+'-------'+str(self.act/(self.act+self.rand_act)))
+            action = np.random.choice(self.actions, p=probabilities)
+        else:  # if True:
+            action_indexes = np.argwhere(probabilities == np.amax(probabilities))
+            action_indexes.shape = (action_indexes.shape[0])
+            action_index = np.random.choice(action_indexes)
+            action = self.actions[action_index]
+            self.act += 1
+            print('Not Random' + action+'-------'+str(self.act/(self.act+self.rand_act)))
         return action

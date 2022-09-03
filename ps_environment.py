@@ -76,7 +76,7 @@ class PlantSimulationProblem(Problem):
         possible actions list named "actions" must be returned be simulation within the message
         :return:
         """
-        sleep(0.001)
+        sleep(0.0001)
         if self.next_event:
             self.state = []
             #states = self.plantsim.get_next_message()
