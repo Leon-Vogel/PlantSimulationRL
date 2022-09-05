@@ -27,7 +27,7 @@ env = Environment(plantsim)
 # agent = DeepQLearningAgent(env.problem)
 agent = DoubleDeepQLearningAgent(env.problem)
 performance_train = []
-q_table = agent.load()
+#q_table = agent.load()
 # training
 for it in tqdm(range(max_iterations), desc="Trainingsfortschritt: "):
     # while it < max_iterations:
@@ -36,7 +36,7 @@ for it in tqdm(range(max_iterations), desc="Trainingsfortschritt: "):
     q_table, N_sa = agent.train()
     evaluation = env.problem.evaluation
     performance_train.append(evaluation)
-    agent.save()
+    #agent.save()
     env.reset()
 
 #plantsim.quit()
