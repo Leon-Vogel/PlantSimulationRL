@@ -6,12 +6,10 @@ import numpy as np
 from plantsim.plantsim import Plantsim
 from tqdm import tqdm
 
-# doubleclick object in PlantSim and lookup the path_context
-# socket is the name of the socket object in PlantSim or None if not used
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 # model = pfad + '\MiniFlow_BE_based_MAS.spp'
 # model = pfad + '\Methodenvergleich_20220902.spp'
-model = pfad + '\PickandPlace_diL_20220903_mit_Lagerstand_neuer_R_mit_Durchlaufzeit.spp'
+model = pfad + '\PickandPlace_diL_20220906_mit_Lagerstand_neuer_R_mit_Durchlaufzeit.spp'
 #model = pfad + '\PickandPlace_diL_20220902_mit_Lagerstand_neuer_R.spp'
 
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,

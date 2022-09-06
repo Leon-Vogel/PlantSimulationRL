@@ -51,7 +51,7 @@ class PPOMemory:
 
 class ActorNetwork(nn.Module):
     def __init__(self, n_actions, input_dims, alpha,
-                 fc1_dims=256, fc2_dims=256, chkpt_dir='tmp/ppo'):
+                 fc1_dims=60, fc2_dims=60, chkpt_dir='tmp/ppo'):
         super(ActorNetwork, self).__init__()
 
         self.checkpoint_file = os.path.join(chkpt_dir, 'actor_torch_ppo')
@@ -60,6 +60,7 @@ class ActorNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(fc1_dims, fc2_dims),
             nn.ReLU(),
+            #nn.Dropout(p=0.4),
             nn.Linear(fc2_dims, n_actions),
             nn.Softmax(dim=-1)
         )
@@ -82,7 +83,7 @@ class ActorNetwork(nn.Module):
 
 
 class CriticNetwork(nn.Module):
-    def __init__(self, input_dims, alpha, fc1_dims=256, fc2_dims=256,
+    def __init__(self, input_dims, alpha, fc1_dims=60, fc2_dims=60,
                  chkpt_dir='tmp/ppo'):
         super(CriticNetwork, self).__init__()
 
@@ -111,9 +112,9 @@ class CriticNetwork(nn.Module):
         self.load_state_dict(T.load(self.checkpoint_file))
 
 
-class Agent:
-    def __init__(self, n_actions, input_dims, gamma=0.99, alpha=0.0003, gae_lambda=0.95,
-                 policy_clip=0.2, batch_size=64, n_epochs=10):
+class PPOAgent:
+    def __init__(self, n_actions, input_dims, env=None, gamma=0.999, alpha=0.0003, gae_lambda=0.95,
+                 policy_clip=0.15, batch_size=64, n_epochs=10):
         self.gamma = gamma
         self.policy_clip = policy_clip
         self.n_epochs = n_epochs
@@ -199,5 +200,3 @@ class Agent:
                 self.critic.optimizer.step()
 
         self.memory.clear_memory()
-
-
