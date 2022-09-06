@@ -18,9 +18,9 @@ if __name__ == '__main__':
     plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
                         socket=None, visible=True)
     env = Environment(plantsim)  # env = gym.make('InvertedPendulumBulletEnv-v0')
-    N = 200
-    batch_size = 512
-    n_epochs = 300
+    N = 50
+    batch_size = 64
+    n_epochs = 30
     alpha = 0.0001
 
     actions = env.problem.get_all_actions()
