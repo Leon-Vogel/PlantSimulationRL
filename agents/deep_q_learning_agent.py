@@ -259,9 +259,10 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
             probabilities = max_values / max_values.sum()
         # select action according to the (q) values
         # Aktionsauswahl mit epsilon greedy selection
-        if ((np.random.random()**2) - 0.5) > (((self.counter + 0)/ 20000)) * np.random.random():
+        # Um zu trainieren das False: # entfernen
+        if False: #((np.random.random()**2) - 0.5) > (((self.counter + 0)/ 20000)) * np.random.random():
             self.rand_act += 1
-            print('Random'+'-------'+str(self.act/(self.act+self.rand_act)))
+            print('Random'+'  -------  '+str(round(self.act/(self.act+self.rand_act),3)))
             action = np.random.choice(self.actions, p=probabilities)
         else:  # if True:
             action_indexes = np.argwhere(probabilities == np.amax(probabilities))
@@ -269,5 +270,5 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
             action_index = np.random.choice(action_indexes)
             action = self.actions[action_index]
             self.act += 1
-            print('Not Random' + action+'-------'+str(self.act/(self.act+self.rand_act)))
+            print('Not Random ' + action+' ------- '+str(round(self.act/(self.act+self.rand_act),3)))
         return action

@@ -1,5 +1,4 @@
 from ps_environment import Environment
-from agents.q_learning_agent import QLearningAgent
 from agents.deep_q_learning_agent import DeepQLearningAgent, DoubleDeepQLearningAgent
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,7 +6,8 @@ from plantsim.plantsim import Plantsim
 from tqdm import tqdm
 
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
-model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
+#model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
+model = pfad + '\PickandPlace_diL_20220902_mit_Lagerstand_neuer_R.spp'
 
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
                     socket=None, visible=True)
@@ -17,7 +17,7 @@ it = 0
 env = Environment(plantsim)
 agent = DoubleDeepQLearningAgent(env.problem)
 performance_train = []
-#q_table = agent.load()
+q_table = agent.load()
 # training
 for it in tqdm(range(max_iterations), desc="Trainingsfortschritt: "):
     # while it < max_iterations:
