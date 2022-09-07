@@ -7,22 +7,14 @@ from plantsim.plantsim import Plantsim
 from tqdm import tqdm
 
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
-# model = pfad + '\MiniFlow_BE_based_MAS.spp'
-# model = pfad + '\Methodenvergleich_20220902.spp'
-model = pfad + '\PickandPlace_diL_20220906_mit_Lagerstand_neuer_R_mit_Durchlaufzeit.spp'
-#model = pfad + '\PickandPlace_diL_20220902_mit_Lagerstand_neuer_R.spp'
+model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
 
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
                     socket=None, visible=True)
 
-# set max number of iterations
-
-
 max_iterations = 30
 it = 0
 env = Environment(plantsim)
-# agent = QLearningAgent(env.problem)
-# agent = DeepQLearningAgent(env.problem)
 agent = DoubleDeepQLearningAgent(env.problem)
 performance_train = []
 #q_table = agent.load()
@@ -37,14 +29,15 @@ for it in tqdm(range(max_iterations), desc="Trainingsfortschritt: "):
     #agent.save()
     env.reset()
 
-#plantsim.quit()
+
 # test_agent#
 env = Environment(plantsim)
-#agent = QLearningAgent(env.problem, q_table)
 agent = DoubleDeepQLearningAgent(env.problem)
+q_table = agent.load()
 performance_test = []
 number_of_tests = 20
 it = 0
+env.reset()
 while it < number_of_tests:
     it += 1
     while not env.problem.is_goal_state(env.problem):

@@ -69,9 +69,11 @@ class PolicyNetwork(nn.Module):
         self.optimizer.step()
 
     def save_model(self, file):
+        print("---save---")
         torch.save(self.state_dict(), file)
 
     def load_model(self, file):
+        print("---load---")
         self.load_state_dict(torch.load(file))
 
 
@@ -110,9 +112,11 @@ class ReinforceAgent(Agent):
 
             if self.problem.is_goal_state(current_state):
                 if len(rewards) > 1:
-                    print('Policy Update')
+                    print('\n Policy Update')
                     self.policy.update_policy(log_probabilities, rewards)
                     self.save()
+                return
+            if step > 600:
                 return
             # act
             action = self.actions[action_index]

@@ -1,7 +1,5 @@
-import os
 import torch as T
 import torch.nn.functional as F
-import numpy as np
 from buffer import ReplayBuffer
 from networks_sac import ActorNetwork, CriticNetwork, ValueNetwork
 
@@ -9,7 +7,7 @@ from networks_sac import ActorNetwork, CriticNetwork, ValueNetwork
 class SAC_Agent():
     def __init__(self, alpha=0.0003, beta=0.0003, input_dims=[8],
                  env=None, gamma=0.99, n_actions=2, max_size=1000000, tau=0.005,
-                 layer1_size=256, layer2_size=256, batch_size=256, reward_scale=2):
+                 layer1_size=128, layer2_size=128, batch_size=256, reward_scale=2): #256
         self.gamma = gamma
         self.tau = tau
         self.memory = ReplayBuffer(max_size, input_dims, n_actions)

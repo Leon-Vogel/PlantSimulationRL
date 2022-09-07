@@ -54,7 +54,7 @@ class PlantSimulationProblem(Problem):
                 if value in values:
                     self.plantsim.set_value(f"ActionControl[\"{label}\",1]", value)
         self.plantsim.set_value("ActionControl[\"action\",1]", action)
-        print("Step "+str(self.step)+": "+action+"\n")
+        #print("Step "+str(self.step)+": "+action+"\n")
         self.plantsim.execute_simtalk("AIControl")
         if not self.plantsim.plantsim.IsSimulationRunning():
             self.plantsim.start_simulation()
@@ -76,7 +76,7 @@ class PlantSimulationProblem(Problem):
         possible actions list named "actions" must be returned be simulation within the message
         :return:
         """
-        sleep(0.0001)
+        sleep(0.000001)
         if self.next_event:
             self.state = []
             #states = self.plantsim.get_next_message()
@@ -111,7 +111,7 @@ class PlantSimulationProblem(Problem):
 
     def get_reward(self, state):
         reward = -self.eval(state)
-        print("Reward: "+str(reward))
+        #print("Reward: "+str(reward))
         return reward
 
     def reset(self):

@@ -1,50 +1,14 @@
-import random
-
 from ps_environment import Environment
-import matplotlib.pyplot as plt
 import numpy as np
 from plantsim.plantsim import Plantsim
 from agents.sac_agent import SAC_Agent
-from utils import plot_learning_curve
-from scipy.special import softmax
+from utils import plot_learning_curve, get_actions, get_actions2
 
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
-# model = pfad + '\MiniFlow_BE_based_MAS.spp'
-#model = pfad + '\Reihenfolgeplanung_diL_20220829_mit_komplettemLagerstand_SAC_neuer_Reward.spp'
-model = pfad + '\PickandPlace_diL_20220903_mit_Lagerstand_neuer_R_mit_Durchlaufzeit.spp'
+model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
 
-# model = pfad + '\Reihenfolgeplanung_diL_20220827.spp'
-
-# pfad = 'D:\\Studium\\3.Semester\DiskreteSimulation&RL\Projekt'
-# model = pfad + '\game_assembly_20220825.2.spp'
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
-                    socket=None, visible=True)
-
-
-def get_actions2(act):
-    a = [0, 0, 0]
-    if act == 0:
-        a = [1, 0, 0]
-    elif act == 1:
-        a = [0, 1, 0]
-    elif act == 2:
-        a = [0, 0, 1]
-    return a
-
-
-
-
-def get_actions(act):
-    #probs = softmax(act)
-    #a = random.choices(population=['Schleife','Lager1','Lager2'], weights=probs)
-    if np.argmax(act) == 1:
-        a = 'Lager1'
-    elif np.argmax(act) == 2:
-        a = 'Lager2'
-    else:
-        a = 'Schleife'
-    return a#[0]
-
+                    socket=None, visible=False)
 
 if __name__ == '__main__':
     env = Environment(plantsim)  # env = gym.make('InvertedPendulumBulletEnv-v0')
@@ -76,6 +40,7 @@ if __name__ == '__main__':
         done = False
         score = 0
         step = 0
+        count = 1
         while True:
             current_state = env.problem.get_current_state()
             step += 1
@@ -93,11 +58,15 @@ if __name__ == '__main__':
                 break
 
             action = get_actions(agent.choose_action(s_new))  # (observation)
-            print(action)
+            if r == 10:
+                count += 10
+            print("Step " + str(step) + ": " + action + " - Reward: " + str(r) + " - finished: " + str(
+                count - 1) + " - " + str(round((step / count), 3)) + "\n")
+
             env.problem.act(action)
 
         performance_train.append(score)
-        avg_score = np.mean(performance_train[-1000:])
+        avg_score = np.mean(performance_train[-1:])
 
         if avg_score > best_score:
             best_score = avg_score
