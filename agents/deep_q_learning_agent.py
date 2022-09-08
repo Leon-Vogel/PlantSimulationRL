@@ -169,7 +169,7 @@ class DeepQLearningAgent(QLearningAgent):
 
 class DoubleDeepQLearningAgent(DeepQLearningAgent):
 
-    def __init__(self, problem, q_table=None, N_sa=None, gamma=0.9, max_N_exploration=100, R_Max=100,
+    def __init__(self, problem, extra=None, q_table=None, N_sa=None, gamma=0.9, max_N_exploration=100, R_Max=100,
                  q_table_file="double_deep_q_table.pth", batch_size=10, Optimizer=torch.optim.Adam,
                  loss_fn=nn.MSELoss(), ModelClass=DeepQTable,
                  update_interval=40):  # DeepQTableDeepDuelingQTable, update_interval=40):
@@ -182,6 +182,7 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         self.counter = 1
         self.rand_act = 0
         self.act = 0
+        self.environment = extra
 
     def update_q_values(self, s, a, r, s_new, is_goal_state):
         self.experience_replay.remember((s, a, r, s_new), is_goal_state)
@@ -202,16 +203,18 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         action = self.actions[np.argmax(self.q_table[s])]
         return action
 
-    # Todo: eigene train methode schreiben
-    def save(self):
-        torch.save(self.online_q_table.state_dict(), "q_table.npy")
+    def save(self, file="q_table.npy"):
+        torch.save(self.online_q_table.state_dict(), file)
         print('Save successful')
         # self.online_q_table.save_model("q_table.npy")
 
-    def load(self):
-        if os.path.exists("D:\Studium\Projekt\Methodenvergleich\PlantSimulationRL\q_table.npy"):
-            self.q_table.load_model("q_table.npy")
-            self.online_q_table.load_model("q_table.npy")
+    def load(self, file="q_table.npy"):
+        #if os.path.exists("D:\Studium\Projekt\Methodenvergleich\PlantSimulationRL\q_table.npy"):
+        if os.path.exists(file):
+            self.q_table.load_model(file)
+            self.online_q_table.load_model(file)
+        else:
+            print('Keine Datei')
 
     def train(self):
         action = None
@@ -221,6 +224,7 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         self.rand_act = 0
         # self.load()
         while True:
+            #self.environment.stop_simulation()
             current_state = self.problem.get_current_state()
             step += 1
             r = self.problem.get_reward(current_state)
@@ -260,7 +264,7 @@ class DoubleDeepQLearningAgent(DeepQLearningAgent):
         # select action according to the (q) values
         # Aktionsauswahl mit epsilon greedy selection
         # Um zu trainieren das False: # entfernen
-        if False: #((np.random.random()**2) - 0.5) > (((self.counter + 0)/ 20000)) * np.random.random():
+        if ((np.random.random()**2) - 0.5) > (((self.counter + 0)/ 20000)) * np.random.random():
             self.rand_act += 1
             print('Random'+'  -------  '+str(round(self.act/(self.act+self.rand_act),3)))
             action = np.random.choice(self.actions, p=probabilities)
