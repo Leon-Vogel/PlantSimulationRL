@@ -8,7 +8,7 @@ from tqdm import tqdm
 #pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
 #model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
-model = pfad + '\Methodenvergleich_20220908.spp'
+model = pfad + '\Methodenvergleich_20220909.spp'
 
 file='tmp\MV_deep_q_table.npy'
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,

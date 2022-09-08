@@ -5,7 +5,8 @@ from agents.sac_agent import SAC_Agent
 from utils import plot_learning_curve, get_actions, get_actions2
 
 pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
-model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
+#model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
+model = pfad + '\Methodenvergleich_20220909.spp'
 
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
                     socket=None, visible=False)
