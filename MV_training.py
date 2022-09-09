@@ -5,9 +5,9 @@ import numpy as np
 from plantsim.plantsim import Plantsim
 from tqdm import tqdm
 
-# pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
+pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
 # model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
-pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
+#pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 model = pfad + '\Methodenvergleich_20220909_mitLager.spp'
 
 file = 'tmp\MV_deep_q_table.npy'

@@ -9,12 +9,13 @@ import os
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
-pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
+pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
+#pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
 model = pfad + '\Methodenvergleich_20220909_mitLager.spp'
 
 if __name__ == '__main__':
     plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
-                        socket=None, visible=False)
+                        socket=None, visible=True)
     env = Environment(plantsim)  # env = gym.make('InvertedPendulumBulletEnv-v0')
     # Nachkommastelle an N anfügen, um das Lernen auszuschalten
     N = 40  # 30 to 5000 steps between training
