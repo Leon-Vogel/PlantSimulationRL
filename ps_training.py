@@ -1,12 +1,12 @@
 from ps_environment import Environment
-from agents.deep_q_learning_agent import DeepQLearningAgent, DoubleDeepQLearningAgent
+from agents.deep_q_learning_agent import DoubleDeepQLearningAgent
 import matplotlib.pyplot as plt
 import numpy as np
 from plantsim.plantsim import Plantsim
 from tqdm import tqdm
 
-# pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
-pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
+pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
+# pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
 # model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
 model = pfad + '\PickandPlace_diL_20220902_mit_Lagerstand_neuer_R.spp'
 file = 'q_table.npy'

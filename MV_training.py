@@ -1,16 +1,16 @@
 from ps_environment import Environment
-from agents.deep_q_learning_agent import DeepQLearningAgent, DoubleDeepQLearningAgent
+from agents.deep_q_learning_agent import DoubleDeepQLearningAgent
 import matplotlib.pyplot as plt
 import numpy as np
 from plantsim.plantsim import Plantsim
 from tqdm import tqdm
 
-#pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
-pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
-#model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
-model = pfad + '\Methodenvergleich_20220909.spp'
+# pfad = 'E:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL_Git\simulations'
+# model = pfad + '\PickandPlace_diL_20220906_mit_Produktanteilen.spp'
+pfad = 'D:\\Studium\Projekt\Methodenvergleich\PlantSimulationRL\simulations'
+model = pfad + '\Methodenvergleich_20220909_mitLager.spp'
 
-file='tmp\MV_deep_q_table.npy'
+file = 'tmp\MV_deep_q_table.npy'
 plantsim = Plantsim(version='22.1', license_type='Educational', path_context='.Modelle.Modell', model=model,
                     socket=None, visible=True)
 
@@ -30,7 +30,6 @@ for it in tqdm(range(max_iterations), desc="Trainingsfortschritt: "):
     performance_train.append(evaluation)
     agent.save(file)
     env.reset()
-
 
 # test_agent#
 env = Environment(plantsim)
